@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "faster-ming"
+version = "0.1.0"
+description = "Ming-3.0-tts inference, 7.7x faster, waveform identical to the bit"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+keywords = ["tts", "cuda-graphs", "inference", "ming", "speech-synthesis"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Multimedia :: Sound/Audio :: Speech",
+    "License :: OSI Approved :: MIT License",
+]
+
+# torch is deliberately not pinned here: the right wheel depends on the CUDA
+# version installed, and pip picking one for you is how environments break.
+# transformers >= 4.46 is required for StaticCache with cache_position.
+dependencies = ["transformers>=4.46"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[tool.setuptools]
+packages = ["faster_ming"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
