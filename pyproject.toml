@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "faster-ming"
 version = "0.1.0"
-description = "Ming-3.0-tts inference, 7.7x faster, waveform identical to the bit"
+description = "Ming-3.0-tts inference, about 7x faster, waveform identical to the bit"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
@@ -18,8 +18,11 @@ classifiers = [
 
 # torch is deliberately not pinned here: the right wheel depends on the CUDA
 # version installed, and pip picking one for you is how environments break.
-# transformers >= 4.46 is required for StaticCache with cache_position.
-dependencies = ["transformers>=4.46"]
+# transformers >= 4.46 is required for StaticCache with cache_position, and
+# < 4.54 because 4.54 rebuilt the cache around `layers` and 4.56 removed the
+# `key_cache` / `value_cache` lists the prefill transplant writes into.
+# Bit identity was verified on 4.46.3, which is what upstream pins.
+dependencies = ["transformers>=4.46,<4.54"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8"]

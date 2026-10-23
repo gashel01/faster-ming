@@ -5,6 +5,14 @@
 No retraining, no quantization, no distillation, no rewritten model. Three changes, all of
 which leave the arithmetic alone.
 
+**Listen first:** [`samples/`](samples/) holds French, English and Chinese, plus angry renders in
+English and Chinese, each with the SHA-256 of the upstream and the faster-ming output side by
+side.
+
+One thing to know up front: this is a throughput gain, **not streaming**. Upstream decodes the
+whole utterance before the first sample comes out, and so does this. Details under
+[What this does not do](#what-this-does-not-do).
+
 ```python
 from ming_tts import MingTTS
 from faster_ming import accelerate
@@ -157,6 +165,15 @@ left in a local.
 
 ## Run the benches yourself
 
+`samples.py` is the one to start with: it renders the listening samples on both paths, writes a
+file only if the two are identical to the bit, and records both hashes.
+
+```bash
+python bench/samples.py --ming /path/to/Ming-3.0-tts --weights /path/to/Ming-3.0-tts-0.5B     --reference data/wavs/<one of upstream's prompts>.wav
+```
+
+The rest:
+
 ```bash
 python bench/verify.py \
     --ming /path/to/Ming-3.0-tts \
@@ -197,8 +214,10 @@ no 3 GB checkpoint on disk.
 
 - the upstream inference repo on the import path — the Hugging Face checkpoint alone is not
   enough
-- `torch` with CUDA (developed on 2.6.0+cu124), `transformers >= 4.46` for `StaticCache` with
-  `cache_position`
+- `torch` with CUDA (developed on 2.6.0+cu124), and `transformers >= 4.46, < 4.54`: 4.46 for
+  `StaticCache` with `cache_position`, and below 4.54 because that release rebuilt the cache
+  around `layers` (4.56 then removed the `key_cache` lists the prefill transplant writes into).
+  Bit identity was verified on 4.46.3, which is what upstream pins.
 - upstream pins `torch==2.6.0` and `transformers==4.46.3`, which wants its own environment
 
 ## License

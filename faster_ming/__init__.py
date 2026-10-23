@@ -1,4 +1,4 @@
-"""faster-ming: Ming-3.0-tts, same weights, same output, 7.7x the speed.
+"""faster-ming: Ming-3.0-tts, same weights, same output, about 7x the speed.
 
     from ming_tts import MingTTS
     from faster_ming import accelerate
@@ -21,7 +21,7 @@ which leave the arithmetic alone:
                                             0.36x   ->  2.68x real time
 
 Measured end to end on an RTX 3070 Ti Laptop (8 GB, Windows/WDDM), bfloat16,
-seven cases covering short, long, split-text, two guidance scales and three
+seven cases covering short, long, split-text, two guidance scales and two
 languages: **about 7x (5.4-8.1x)**, from 0.33x to 1.8-2.8x real time, **output
 identical to the bit in all seven**, +207 MB peak memory.
 
@@ -33,7 +33,7 @@ weights and only changes the dispatch, the muted head drops a product whose
 result was discarded, and a static cache adds exact zeros to a softmax sum.
 
 Requires: the upstream inference repo (github.com/inclusionAI/Ming-3.0-tts) on
-the import path, torch with CUDA, transformers >= 4.46.
+the import path, torch with CUDA, transformers >= 4.46 and < 4.54 (verified on 4.46.3).
 """
 
 from __future__ import annotations

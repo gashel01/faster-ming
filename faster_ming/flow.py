@@ -1,4 +1,4 @@
-"""The flow-matching head in one CUDA graph. 74% of the time lives here.
+"""The flow-matching head in one CUDA graph. 75% of the time lives here.
 
 WHY THE HEAD AND NOT THE BACKBONE
 
@@ -25,7 +25,8 @@ any of that. A CUDA graph replaces every launch with one.
 
 The graph is also the proof: it does not change a single kernel, weight or
 shape, only the dispatch. Output identical to the bit plus an 8.5x speedup
-means the cost was dispatch all along.
+on the head alone (167 ms -> 19.8 ms per step) means the cost was dispatch
+all along.
 
 WHAT IS CAPTURED, AND WHAT DELIBERATELY IS NOT
 
